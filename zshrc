@@ -36,11 +36,6 @@ if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
   eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.json)"
 fi
 
-# Keybindings
-#bindkey -e
-#bindkey '^p' history-search-backward
-#bindkey '^n' history-search-forward
-#bindkey '^[w' kill-region
 
 # History
 HISTSIZE=50000
@@ -65,10 +60,10 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -las type --color=alway
 zstyle ':completion:*:git-checkout:*' sort false
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
-
 # Aliases
 alias ls='ls --color'
-
+alias k='kubectl'
+alias gc='czg ai -N=5'
 
 # Shell integrations
 eval "$(zoxide init --cmd cd zsh)"
@@ -76,35 +71,27 @@ eval "$(fnm env --use-on-cd)"
 eval "$(fzf --zsh)"
 
 # Env variables
-export LANG=en_US.UTF-8
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
 export DOPPLER_TOKEN=$(doppler configure get token --plain)
-export EDITOR="zed --wait"
+export EDITOR="vim"
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+. "$HOME/.cargo/env"
 
 
-# pnpm
-if $is_wsl; then
-  export PNPM_HOME="/home/timpan4/.local/share/pnpm"
-  case ":$PATH:" in
-    *":$PNPM_HOME:"*) ;;
-    *) export PATH="$PNPM_HOME:$PATH" ;;
-  esac
-else
-  export PNPM_HOME="/Users/timpan4/Library/pnpm"
-  case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-  esac
-fi
-# pnpm end
-
-
-# bun completions
-[ -s "/Users/timpan4/.bun/_bun" ] && source "/Users/timpan4/.bun/_bun"
-
-
-export PATH="/Users/timpan4/.krew/bin:/Users/timpan4/.deno/bin:/Users/timpan4/.bun/bin:/Users/timpan4/Library/pnpm:/Users/timpan4/.local/state/fnm_multishells/24197_1732282427593/bin:/Users/timpan4/.local/share/zinit/polaris/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/Wireshark.app/Contents/MacOS:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/timpan4/.cargo/bin:/Applications/Ghostty.app/Contents/MacOS:/Users/timpan4/.orbstack/bin:/Users/timpan4/Library/Application Support/JetBrains/Toolbox/scripts"
 export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:$HOME/go/bin"
+export PATH=$PATH:/opt/homebrew/bin:$HOME/go/bin:/opt/homebrew/opt/postgresql@17/bin:$HOME/gwctl/bin
+
+# Google Cloud SDK.
+[[ -f "$HOME"/google-cloud-sdk/path.zsh.inc ]] && source "$HOME"/google-cloud-sdk/path.zsh.inc
+[[ -f "$HOME"/google-cloud-sdk/completion.zsh.inc ]] && source "$HOME"/google-cloud-sdk/completion.zsh.inc
+
 fpath+=~/.zfunc; autoload -Uz compinit; compinit
 
 # Load a few important annexes, without Turbo
@@ -117,11 +104,13 @@ zinit light-mode for \
 
 ### End of Zinit's installer chunk
 
-# fnm
-eval "$(fnm env --use-on-cd --shell zsh)"
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init - zsh)"
 
-source <(kubectl completion zsh)
-source <(helm completion zsh)
+[[ -f "$HOME"/.zshrc.local ]] && source "$HOME"/.zshrc.local
+
+# Use fzf for history search
+if command -v fzf >/dev/null 2>&1; then
+    bindkey '^r' fzf-history-widget
+fi
