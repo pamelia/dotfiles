@@ -13,3 +13,6 @@ if [[ -f "$HOME/.zshrc" && ! -L "$HOME/.zshrc" ]]; then
 fi
 
 ln -s zshrc "$HOME/.zshrc"
+
+mkdir -p "$HOME/.config/ohmyposh"
+install -m 644 zen.json "$HOME/.config/ohmyposh"
