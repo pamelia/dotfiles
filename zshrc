@@ -26,14 +26,12 @@ zinit snippet OMZL::correction.zsh
 
 zinit snippet OMZP::aws
 zinit snippet OMZP::azure
-zinit snippet OMZP::bun
 zinit snippet OMZP::command-not-found
 zinit snippet OMZP::eza
 zinit snippet OMZP::git
 zinit snippet OMZP::github
 zinit snippet OMZP::golang
 zinit snippet OMZP::istioctl
-zinit snippet OMZP::kind
 zinit snippet OMZP::kubectl
 zinit snippet OMZP::kubectx
 zinit snippet OMZP::nmap
@@ -42,7 +40,6 @@ zinit snippet OMZP::nvm
 zinit snippet OMZP::postgres
 zinit snippet OMZP::python
 zinit snippet OMZP::sudo
-zinit snippet OMZP::tmux
 
 # Load completions
 autoload -Uz compinit && compinit
