@@ -123,6 +123,9 @@ eval "$(pyenv init - zsh)"
 
 [[ -f "$HOME"/.zshrc.local ]] && source "$HOME"/.zshrc.local
 
+# Ensure emacs-style keybindings are enabled (this includes Ctrl-a and Ctrl-k)
+bindkey -e
+
 # Use fzf for history search
 if command -v fzf >/dev/null 2>&1; then
     bindkey '^r' fzf-history-widget
