@@ -130,3 +130,6 @@ bindkey -e
 if command -v fzf >/dev/null 2>&1; then
     bindkey '^r' fzf-history-widget
 fi
+
+[[ -f "$HOME"/.zshrc.local ]] && source "$HOME"/.zshrc.local
+
