@@ -134,3 +134,20 @@ fi
 
 [[ -f "$HOME"/.zshrc.local ]] && source "$HOME"/.zshrc.local
 
+fetch_crds_by_group() {
+  local api_group="$1"
+  local output_dir="$HOME/crds"
+
+  if [[ -z "$api_group" ]]; then
+    echo "Usage: fetch_crds_by_group <api-group>"
+    return 1
+  fi
+
+  mkdir -p "$output_dir"
+
+  kubectl api-resources --api-group "$api_group" -o name | while read -r crd; do
+    echo "Fetching CRD: $crd"
+    kubectl get crd "$crd" -o yaml > "${output_dir}/${crd}.yaml"
+  done
+
+}
