@@ -122,8 +122,6 @@ export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init - zsh)"
 
-[[ -f "$HOME"/.zshrc.local ]] && source "$HOME"/.zshrc.local
-
 # Ensure emacs-style keybindings are enabled (this includes Ctrl-a and Ctrl-k)
 bindkey -e
 
@@ -132,8 +130,7 @@ if command -v fzf >/dev/null 2>&1; then
     bindkey '^r' fzf-history-widget
 fi
 
-[[ -f "$HOME"/.zshrc.local ]] && source "$HOME"/.zshrc.local
-
+# Misc functions
 fetch_crds_by_group() {
   local api_group="$1"
   local output_dir="$HOME/crds"
@@ -151,3 +148,6 @@ fetch_crds_by_group() {
   done
 
 }
+
+# Whatever you for some reason don't want to have in git, put it here
+[[ -f "$HOME"/.zshrc.local ]] && source "$HOME"/.zshrc.local
