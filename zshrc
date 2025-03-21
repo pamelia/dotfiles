@@ -74,6 +74,7 @@ zstyle ':completion:*:git-checkout:*' sort false
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
 # Aliases
+alias l='eza -las type --color=always --icons -F --no-permissions $realpath'
 alias ls='ls --color'
 alias k='kubectl'
 alias gc='czg ai -N=5'
