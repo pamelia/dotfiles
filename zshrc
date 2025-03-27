@@ -149,5 +149,9 @@ fetch_crds_by_group() {
 
 }
 
+if command -v argo > /dev/null; then
+  source <(argo completion zsh)
+fi
+
 # Whatever you for some reason don't want to have in git, put it here
 [[ -f "$HOME"/.zshrc.local ]] && source "$HOME"/.zshrc.local
