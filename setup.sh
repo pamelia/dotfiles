@@ -21,10 +21,8 @@ source "$HOME/.zshrc"
 
 go install github.com/cloudflare/cfssl/cmd/...@latest
 go install github.com/goreleaser/goreleaser/v2@latest
-go install github.com/monasticacademy/httptap@latest
 go install github.com/pamelia/git-crypt@latest
 go install github.com/spf13/cobra-cli@latest
-go install sigs.k8s.io/kind@latest
 
 if ! command -v spf >/dev/null 2>&1; then
     bash -c "$(curl -sLo- https://superfile.netlify.app/install.sh)"
