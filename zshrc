@@ -87,7 +87,6 @@ eval "$(fzf --zsh)"
 # Env variables
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
-export DOPPLER_TOKEN=$(doppler configure get token --plain)
 export EDITOR="vim"
 export GOROOT=/opt/homebrew/opt/go/libexec
 export GOPATH=$HOME/go
@@ -147,6 +146,10 @@ fetch_crds_by_group() {
     kubectl get crd "$crd" -o yaml > "${output_dir}/${crd}.yaml"
   done
 
+}
+
+doppler_init() {
+    export DOPPLER_TOKEN=$(doppler configure get token --plain)
 }
 
 if command -v argo > /dev/null; then
