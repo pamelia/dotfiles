@@ -130,6 +130,11 @@ if command -v fzf >/dev/null 2>&1; then
 fi
 
 # Misc functions
+get_pod_images() {
+    local namespace="$1"
+    kubectl -n "$namespace" get pod -o jsonpath="{range .items[*]}{.metadata.namespace}{'\t'}{.metadata.name}{'\t'}{range .spec.containers[*]}{.image}{'\t'}{end}{'\n'}"
+}
+
 fetch_crds_by_group() {
   local api_group="$1"
   local output_dir="$HOME/crds"
