@@ -1,4 +1,9 @@
-eval "$(/opt/homebrew/bin/brew shellenv)"
+if [[ -f /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+[[ -d "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
 
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -15,6 +20,7 @@ source "${ZINIT_HOME}/zinit.zsh"
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
+command -v fzf >/dev/null 2>&1 && eval "$(fzf --zsh)"
 zinit light Aloxaf/fzf-tab
 #zinit load zpm-zsh/ls
 
@@ -42,11 +48,16 @@ zinit snippet OMZP::python
 zinit snippet OMZP::sudo
 
 # Load completions
+fpath+=~/.zfunc
 autoload -Uz compinit && compinit
 
 zinit cdreplay -q
 if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
-  eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.json)"
+  if [[ "$(uname -s)" == "Linux" ]]; then
+    eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen-lima.json)"
+  else
+    eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.json)"
+  fi
 fi
 
 
@@ -80,21 +91,24 @@ alias k='kubectl'
 alias gc='czg ai -N=5'
 
 # Shell integrations
-eval "$(zoxide init --cmd cd zsh)"
-eval "$(fnm env --use-on-cd)"
-eval "$(fzf --zsh)"
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init --cmd cd zsh)"
+command -v fnm >/dev/null 2>&1 && eval "$(fnm env --use-on-cd)"
 
 # Env variables
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 export EDITOR="vim"
-export GOROOT=/opt/homebrew/opt/go/libexec
+if [[ -d /opt/homebrew/opt/go/libexec ]]; then
+  export GOROOT=/opt/homebrew/opt/go/libexec
+elif [[ -d /usr/local/go ]]; then
+  export GOROOT=/usr/local/go
+fi
 export GOPATH=$HOME/go
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-. "$HOME/.cargo/env"
+[[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
 
 
 export PATH="$PATH:/usr/local/go/bin"
@@ -105,7 +119,6 @@ export PATH=$PATH:/opt/homebrew/bin:$HOME/go/bin:/opt/homebrew/opt/postgresql@17
 [[ -f "$HOME"/google-cloud-sdk/path.zsh.inc ]] && source "$HOME"/google-cloud-sdk/path.zsh.inc
 [[ -f "$HOME"/google-cloud-sdk/completion.zsh.inc ]] && source "$HOME"/google-cloud-sdk/completion.zsh.inc
 
-fpath+=~/.zfunc; autoload -Uz compinit; compinit
 
 # Load a few important annexes, without Turbo
 # (this is currently required for annexes)
@@ -119,7 +132,7 @@ zinit light-mode for \
 
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - zsh)"
+command -v pyenv >/dev/null 2>&1 && eval "$(pyenv init - zsh)"
 
 # Ensure emacs-style keybindings are enabled (this includes Ctrl-a and Ctrl-k)
 bindkey -e
@@ -162,4 +175,4 @@ if command -v argo > /dev/null; then
 fi
 
 # Whatever you for some reason don't want to have in git, put it here
-[[ -f "$HOME"/.zshrc.local ]] && source "$HOME"/.zshrc.local
+if [[ -f "$HOME"/.zshrc.local ]]; then source "$HOME"/.zshrc.local; fi
