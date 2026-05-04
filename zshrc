@@ -42,7 +42,6 @@ zinit snippet OMZP::kubectl
 zinit snippet OMZP::kubectx
 zinit snippet OMZP::nmap
 zinit snippet OMZP::npm
-zinit snippet OMZP::nvm
 zinit snippet OMZP::postgres
 zinit snippet OMZP::python
 zinit snippet OMZP::sudo
@@ -176,10 +175,6 @@ fi
 
 # Whatever you for some reason don't want to have in git, put it here
 if [[ -f "$HOME"/.zshrc.local ]]; then source "$HOME"/.zshrc.local; fi
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # Added by GitButler installer
 export PATH="/Users/mpamelia/.local/bin:$PATH"
