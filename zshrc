@@ -10,7 +10,7 @@ ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
 # Download Zinit, if it's not there yet
 if [ ! -d "$ZINIT_HOME" ]; then
-   mkdir -p "$(dirname $ZINIT_HOME)"
+   mkdir -p "$(dirname "$ZINIT_HOME")"
    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
@@ -84,8 +84,16 @@ zstyle ':completion:*:git-checkout:*' sort false
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
 # Aliases
-alias l='eza -las type --color=always --icons -F --no-permissions $realpath'
-alias ls='ls --color'
+if command -v eza >/dev/null 2>&1; then
+  alias l='eza -la --sort=type --color=always --icons -F --no-permissions'
+  alias ls='eza --color=always --icons'
+elif [[ "$(uname -s)" == "Darwin" ]]; then
+  alias l='ls -la'
+  alias ls='ls -G'
+else
+  alias l='ls -la'
+  alias ls='ls --color=auto'
+fi
 alias k='kubectl'
 alias gc='czg ai -N=5'
 
@@ -112,7 +120,7 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:$HOME/go/bin"
-export PATH=$PATH:/opt/homebrew/bin:$HOME/go/bin:/opt/homebrew/opt/postgresql@17/bin:$HOME/gwctl/bin
+export PATH=$PATH:/opt/homebrew/bin:$HOME/go/bin:$HOME/gwctl/bin
 
 # Google Cloud SDK.
 [[ -f "$HOME"/google-cloud-sdk/path.zsh.inc ]] && source "$HOME"/google-cloud-sdk/path.zsh.inc
@@ -176,6 +184,6 @@ fi
 # Whatever you for some reason don't want to have in git, put it here
 if [[ -f "$HOME"/.zshrc.local ]]; then source "$HOME"/.zshrc.local; fi
 
-# Added by GitButler installer
-export PATH="/Users/mpamelia/.local/bin:$PATH"
-eval "$(but completions zsh)"
+if command -v but >/dev/null 2>&1; then
+  eval "$(but completions zsh)"
+fi
